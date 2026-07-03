@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:'DM Sans',system-ui,sans-serif;background:#171717;color:#F3EBDD;-webkit-font-smoothing:antialiased}
+  a{text-decoration:none;color:inherit}
+  @media (max-width:860px){
+    .pp-header{padding:14px 18px !important}
+    .pp-logo{height:48px !important}
+    .pp-nav{gap:14px !important;font-size:13px !important}
+    .pp-heroword{font-size:34px !important;top:16px !important;opacity:.18 !important}
+    .pp-hero-inner{padding:0 20px !important}
+    .pp-hero-grid{grid-template-columns:1fr !important;min-height:auto !important}
+    .pp-hero-copy{padding:56px 0 0 0 !important;max-width:none !important}
+    .pp-h1{font-size:40px !important}
+    .pp-imgwrap{height:auto !important;display:flex !important;justify-content:center !important;align-items:flex-end !important;margin-top:0 !important}
+    .pp-woman{position:static !important;width:112% !important;max-width:none !important;height:auto !important;right:auto !important;bottom:auto !important;display:block !important;margin:-24px -6% 0 -6% !important;filter:drop-shadow(0 12px 24px rgba(120,30,4,.3)) !important}
+    .pp-strip-grid{grid-template-columns:1fr !important;gap:0 !important}
+    .pp-strip-cell{border-left:0 !important;border-right:0 !important;border-bottom:1px solid rgba(255,255,255,.1) !important;padding:14px 8px !important}
+    .pp-strip-cell:last-child{border-bottom:0 !important}
+    .pp-products-grid{grid-template-columns:1fr !important;gap:18px !important}
+    .pp-sec{padding:36px 20px 12px !important}
+    .pp-sec-h2{font-size:32px !important}
+    .pp-detail-sec{padding:18px 20px 48px !important}
+    .pp-detail-grid{grid-template-columns:1fr !important;gap:26px !important}
+    .pp-gallery{grid-template-columns:60px 1fr !important;position:static !important;top:auto !important}
+    .pp-detail-h1{font-size:40px !important}
+    .pp-footer-inner{padding:34px 20px 26px !important}
+  }
+</style>
+</helmet>
+
+<div style="width:100%;min-height:100vh;background:#171717;overflow-x:hidden">
+
+  <!-- HEADER -->
+  <header class="pp-header" style="max-width:1240px;margin:0 auto;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <a onClick="{{ goHome }}" style="display:flex;align-items:center;gap:10px;cursor:pointer">
+      <img class="pp-logo" src="assets/logo.png" alt="Party Peak" style="height:64px;width:auto;display:block">
+    </a>
+    <nav class="pp-nav" style="display:flex;align-items:center;gap:28px;font-size:14px;font-weight:600;color:#6B5B49">
+      <a onClick="{{ goToProdukte }}" style="letter-spacing:.01em;cursor:pointer" onMouseOver="this.style.color='#E01E1E'" onMouseOut="this.style.color='#6B5B49'">Spiele</a>
+      <a href="#impressum" onMouseOver="this.style.color='#E01E1E'" onMouseOut="this.style.color='#6B5B49'">Impressum</a>
+      <a href="#datenschutz" onMouseOver="this.style.color='#E01E1E'" onMouseOut="this.style.color='#6B5B49'">Datenschutz</a>
+    </nav>
+  </header>
+
+  <!-- ============ HOME ============ -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+
+  <!-- HERO -->
+  <section ref="{{ heroRef }}" style="position:relative;width:100%;overflow:hidden;background:radial-gradient(120% 130% at 20% 0%, #FFB347 0%, #F97717 42%, #E8480E 100%)">
+
+
+    <div class="pp-heroword" style="position:absolute;top:34px;left:0;right:0;text-align:center;font-family:'Anton',sans-serif;font-size:clamp(90px,13vw,166px);line-height:.9;letter-spacing:.01em;color:#fff;opacity:.15;white-space:nowrap;pointer-events:none;user-select:none">PARTY‑APPROVED</div>
+
+    <div class="pp-hero-inner" style="position:relative;z-index:3;max-width:1240px;margin:0 auto;padding:0 32px">
+      <div style="padding-top:30px">
+        
+      </div><div class="pp-hero-grid" style="display:grid;grid-template-columns:1.05fr .95fr;align-items:end;min-height:540px;gap:0">
+        <div class="pp-hero-copy" style="padding:64px 20px 96px 0;max-width:560px">
+          <h1 class="pp-h1" style="font-family:'Anton',sans-serif;font-weight:400;font-size:66px;line-height:.98;letter-spacing:.005em;color:#fff;margin:0 0 20px;text-shadow:0 3px 0 rgba(184,52,8,.35)"><br><br>SPIELE, DIE JEDE<br>RUNDE ZUM<br>GIPFEL BRINGEN.</h1>
+          <p style="font-size:17px;line-height:1.55;color:rgba(255,255,255,.94);margin:0 0 30px;max-width:440px;font-weight:500">Trink- und Partyspiele mit Suchtfaktor – laut, schnell, ehrlich. Ausgesucht für den einen Abend, über den ihr noch lange redet.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+            <a onClick="{{ goToProdukte }}" style="display:inline-flex;align-items:center;gap:10px;background:#E01E1E;color:#fff;font-weight:700;font-size:15px;letter-spacing:.03em;text-transform:uppercase;padding:16px 30px;border-radius:999px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(160,10,10,.7);transition:transform .15s, box-shadow .15s" onMouseOver="this.style.transform='translateY(-2px)';this.style.boxShadow='0 18px 30px -8px rgba(160,10,10,.8)'" onMouseOut="this.style.transform='none';this.style.boxShadow='0 12px 24px -8px rgba(160,10,10,.7)'">Zu unseren Spielen →</a>
+            
+          </div>
+        </div>
+        <div class="pp-imgwrap" style="position:relative;align-self:end;height:560px">
+          <img class="pp-woman" src="assets/woman.png" alt="Wer zum Teufel?" style="position:absolute;right:-30px;bottom:0;height:610px;width:auto;max-width:none;filter:drop-shadow(-18px 24px 30px rgba(120,30,4,.32))">
+        </div>
+      </div>
+      
+    </div>
+
+    <div style="position:absolute;left:0;right:0;bottom:0;height:210px;background:linear-gradient(to bottom, rgba(23,23,23,0) 0%, rgba(23,23,23,.55) 52%, #171717 100%);z-index:2;pointer-events:none"></div>
+  </section>
+
+  <!-- VALUE STRIP -->
+  <sc-if value="{{ showValueStrip }}" hint-placeholder-val="{{ true }}">
+  <section style="max-width:1240px;margin:0 auto;padding:20px 32px 8px">
+    <div class="pp-strip-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;text-align:center">
+      <div class="pp-strip-cell" style="padding:6px 8px"><div style="font-family:'Anton',sans-serif;font-size:22px;color:#F97717;margin-bottom:2px">SCHNELL ERKLÄRT</div><div style="font-size:14px;color:#A2937E;font-weight:500">Regeln in unter 2 Minuten – dann geht's los.</div></div>
+      <div class="pp-strip-cell" style="padding:6px 8px;border-left:1px solid rgba(255,255,255,.1);border-right:1px solid rgba(255,255,255,.1)"><div style="font-family:'Anton',sans-serif;font-size:22px;color:#F97717;margin-bottom:2px">FÜR JEDE RUNDE</div><div style="font-size:14px;color:#A2937E;font-weight:500">Ab 3 Personen. Ab 16 Jahren. Ab dem ersten Schluck.</div></div>
+      <div class="pp-strip-cell" style="padding:6px 8px"><div style="font-family:'Anton',sans-serif;font-size:22px;color:#F97717;margin-bottom:2px">KAUF BEI AMAZON</div><div style="font-size:14px;color:#A2937E;font-weight:500">Ein Klick zur Bestellung – Versand &amp; Rückgabe über Amazon.</div></div>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- PRODUCTS -->
+  <a id="produkte"></a>
+  <section ref="{{ produkteRef }}" class="pp-sec" style="max-width:1240px;margin:0 auto;padding:52px 32px 20px">
+    <div style="text-align:center;margin-bottom:38px">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.16em;color:#E8480E;text-transform:uppercase;margin-bottom:10px">Unsere Spiele</div>
+      <h2 class="pp-sec-h2" style="font-family:'Anton',sans-serif;font-weight:400;font-size:52px;line-height:1;letter-spacing:.005em;color:#F3EBDD;margin:0">DREI SPIELE. EIN ABEND ZUM VERGESSEN.</h2>
+    </div>
+
+    <div class="pp-products-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+      <sc-for list="{{ products }}" as="p" hint-placeholder-count="3">
+        <div onClick="{{ p.open }}" style="display:flex;flex-direction:column;background:#201D1A;border:1px solid rgba(255,255,255,.08);border-radius:24px;overflow:hidden;cursor:pointer;box-shadow:0 18px 40px -22px rgba(0,0,0,.8);transition:transform .18s, box-shadow .18s" onMouseOver="this.style.transform='translateY(-4px)';this.style.boxShadow='0 30px 50px -24px rgba(0,0,0,.9)';this.style.borderColor='rgba(249,119,23,.4)'" onMouseOut="this.style.transform='none';this.style.boxShadow='0 18px 40px -22px rgba(0,0,0,.8)';this.style.borderColor='rgba(255,255,255,.08)'">
+          <div style="background:{{ p.tint }};padding:28px;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1">
+            <img src="{{ p.img }}" alt="{{ p.name }}" style="width:{{ p.imgSize }};height:{{ p.imgSize }};object-fit:contain;filter:drop-shadow(0 16px 28px rgba(0,0,0,.5))">
+          </div>
+          <div style="padding:24px 24px 26px;display:flex;flex-direction:column;flex:1">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#C99A5E;margin-bottom:8px">{{ p.tag }}</div>
+            <h3 style="font-family:'Anton',sans-serif;font-weight:400;font-size:30px;line-height:1;letter-spacing:.01em;color:#F3EBDD;margin:0 0 10px">{{ p.name }}</h3>
+            <p style="font-size:14.5px;line-height:1.55;color:#B3A491;margin:0 0 22px;font-weight:500;flex:1">{{ p.teaser }}</p>
+            <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#F97717;color:#fff;font-weight:700;font-size:14px;letter-spacing:.03em;text-transform:uppercase;padding:14px 20px;border-radius:999px">Details ansehen →</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  </sc-if>
+
+  <!-- ============ DETAIL ============ -->
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+  <section class="pp-detail-sec" style="max-width:1240px;margin:0 auto;padding:22px 32px 64px">
+
+    <a onClick="{{ goHome }}" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#B08A5E" onMouseOver="this.style.color='#E01E1E'" onMouseOut="this.style.color='#B08A5E'">← Alle Spiele</a>
+
+    <div class="pp-detail-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:52px;margin-top:22px;align-items:start">
+
+      <!-- GALLERY -->
+      <div class="pp-gallery" style="display:grid;grid-template-columns:84px 1fr;gap:16px;position:sticky;top:20px">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ detail.imgs }}" as="im" hint-placeholder-count="4">
+            <div onClick="{{ im.select }}" style="aspect-ratio:1/1;border-radius:14px;overflow:hidden;cursor:pointer;background:{{ im.tint }};border:2px solid {{ im.border }};display:flex;align-items:center;justify-content:center;padding:8px">
+              <sc-if value="{{ im.src }}" hint-placeholder-val="{{ true }}">
+                <img src="{{ im.src }}" alt="" style="width:100%;height:100%;object-fit:contain">
+              </sc-if>
+              <sc-if value="{{ im.isPlaceholder }}" hint-placeholder-val="{{ false }}">
+                <span style="font-family:ui-monospace,Menlo,monospace;font-size:8px;letter-spacing:.08em;color:#B08A5E">BILD</span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <div style="aspect-ratio:1/1;border-radius:24px;overflow:hidden;background:{{ detail.mainTint }};border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;padding:36px">
+          <sc-if value="{{ detail.mainSrc }}" hint-placeholder-val="{{ true }}">
+            <img src="{{ detail.mainSrc }}" alt="{{ detail.name }}" style="width:88%;height:88%;object-fit:contain;filter:drop-shadow(0 22px 30px rgba(0,0,0,.22))">
+          </sc-if>
+          <sc-if value="{{ detail.mainPlaceholder }}" hint-placeholder-val="{{ false }}">
+            <div style="width:100%;height:100%;border-radius:14px;background:repeating-linear-gradient(45deg,#262320,#262320 14px,#201D1A 14px,#201D1A 28px);display:flex;align-items:center;justify-content:center">
+              <span style="font-family:ui-monospace,Menlo,monospace;font-size:13px;letter-spacing:.12em;color:#8A7862">BEISPIELBILD</span>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <!-- INFO -->
+      <div style="padding-top:4px">
+        <div style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#F97717;margin-bottom:12px">{{ detail.tag }}</div>
+        <h1 class="pp-detail-h1" style="font-family:'Anton',sans-serif;font-weight:400;font-size:58px;line-height:.96;letter-spacing:.005em;color:#F3EBDD;margin:0 0 18px">{{ detail.name }}</h1>
+        <p style="font-size:16.5px;line-height:1.6;color:#C7B8A4;margin:0 0 24px;font-weight:500">{{ detail.longDesc }}</p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px">
+          <sc-for list="{{ detail.features }}" as="f" hint-placeholder-count="4">
+            <span style="font-size:13px;font-weight:600;color:#C7B8A4;background:#201D1A;border:1px solid rgba(255,255,255,.1);padding:9px 15px;border-radius:999px">{{ f }}</span>
+          </sc-for>
+        </div>
+
+        <div style="background:#201D1A;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 24px;margin-bottom:22px;box-shadow:0 18px 40px -26px rgba(0,0,0,.8)">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px">
+            <div>
+              <div style="font-family:'Anton',sans-serif;font-size:22px;color:#F3EBDD;line-height:1">PREIS BEI AMAZON</div>
+              <div style="font-size:13px;color:#A2937E;font-weight:500;margin-top:2px">Aktueller Preis &amp; Verfügbarkeit auf Amazon</div>
+            </div>
+            <img src="assets/logo.png" alt="" style="height:40px;width:auto;opacity:.9">
+          </div>
+          <a href="{{ detail.url }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#E01E1E;color:#fff;font-weight:700;font-size:16px;letter-spacing:.03em;text-transform:uppercase;padding:17px 24px;border-radius:999px;box-shadow:0 12px 24px -8px rgba(160,10,10,.6);transition:transform .15s,background .15s" onMouseOver="this.style.transform='translateY(-2px)';this.style.background='#C41414'" onMouseOut="this.style.transform='none';this.style.background='#E01E1E'">Bei Amazon ansehen →</a>
+          <div style="text-align:center;font-size:12px;color:#9A8770;margin-top:12px;font-weight:500">Öffnet Amazon in einem neuen Tab · Versand &amp; Rückgabe über Amazon</div>
+        </div>
+
+        <!-- ACCORDIONS -->
+        <div style="border-top:1px solid rgba(255,255,255,.14)">
+          <sc-for list="{{ detail.accordions }}" as="a" hint-placeholder-count="3">
+            <div style="border-bottom:1px solid rgba(255,255,255,.14)">
+              <div onClick="{{ a.toggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 2px;cursor:pointer">
+                <span style="font-family:'Anton',sans-serif;font-size:20px;letter-spacing:.01em;color:#F3EBDD">{{ a.title }}</span>
+                <span style="font-size:24px;line-height:1;color:#F97717;font-weight:400">{{ a.icon }}</span>
+              </div>
+              <sc-if value="{{ a.open }}" hint-placeholder-val="{{ false }}">
+                <p style="font-size:15px;line-height:1.65;color:#C7B8A4;margin:0 0 20px;font-weight:500">{{ a.body }}</p>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- FOOTER -->
+  <footer style="margin-top:40px;background:#0E0E0E;color:#E8DCC9">
+    <div class="pp-footer-inner" style="max-width:1240px;margin:0 auto;padding:44px 32px 34px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <img src="assets/logo.png" alt="Party Peak" style="height:52px;width:auto;filter:brightness(1.05)">
+        <span style="font-size:13px;color:#A2917B;max-width:240px;line-height:1.5">Partyspiele mit Suchtfaktor. Alle Käufe laufen über Amazon.</span>
+      </div>
+      <nav style="display:flex;gap:26px;font-size:14px;font-weight:600">
+        <a id="impressum" href="#impressum" onMouseOver="this.style.color='#F97717'" onMouseOut="this.style.color='#E8DCC9'">Impressum</a>
+        <a id="datenschutz" href="#datenschutz" onMouseOver="this.style.color='#F97717'" onMouseOut="this.style.color='#E8DCC9'">Datenschutzerklärung</a>
+      </nav>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.08)"><div style="max-width:1240px;margin:0 auto;padding:16px 32px;font-size:12px;color:#7C6C58">© 2026 Party Peak · „Amazon" und das Amazon-Logo sind Marken von Amazon.com, Inc.</div></div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Orange&quot;,&quot;Rot&quot;,&quot;Sonnenuntergang&quot;],&quot;default&quot;:&quot;Orange&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;showValueStrip&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
+class Component extends DCLogic {
+  state = { route: 'home', activeImg: 0, openAcc: 'ablauf' };
+
+  applyTheme() {
+    const el = this.heroEl;
+    if (!el) return;
+    const themes = {
+      'Orange': 'radial-gradient(120% 130% at 20% 0%, #FFB347 0%, #F97717 42%, #E8480E 100%)',
+      'Rot': 'radial-gradient(120% 130% at 20% 0%, #FF8A4C 0%, #EC3A1E 45%, #C11212 100%)',
+      'Sonnenuntergang': 'radial-gradient(120% 130% at 15% 0%, #FFD24D 0%, #F97717 48%, #D81E4A 100%)'
+    };
+    el.style.background = themes[this.props.heroTheme] || themes['Orange'];
+  }
+  componentDidMount() { this.applyTheme(); }
+  componentDidUpdate() { this.applyTheme(); }
+
+  openDetail(i) { this.setState({ route: i, activeImg: 0, openAcc: 'ablauf' }); window.scrollTo(0, 0); }
+  goHome() { this.setState({ route: 'home' }); window.scrollTo(0, 0); }
+  toggleAcc(key) { this.setState(s => ({ openAcc: s.openAcc === key ? null : key })); }
+  goToProdukte() {
+    if (this.state.route !== 'home') { this.goHome(); }
+    setTimeout(() => { if (this.produkteEl) window.scrollTo({ top: this.produkteEl.offsetTop - 20, behavior: 'smooth' }); }, 60);
+  }
+
+  get PRODUCTS() {
+    return [
+      {
+        name: 'Tipsy Horses', tag: 'Trinkspiel · Reaktion', tint: '#232019', imgSize: '80%',
+        img: 'assets/tipsy-horses.png', url: 'https://www.amazon.de/dp/B0DGFFNQL5',
+        teaser: 'Das schnelle Reaktions-Trinkspiel, das jede Party in den Galopp bringt. Wer zu langsam ist, trinkt.',
+        longDesc: 'Das schnelle Reaktions-Trinkspiel für die ganze Runde. Karten aufdecken, blitzschnell reagieren – wer zögert, trinkt. Der Renner auf jeder Party, in unter zwei Minuten erklärt.',
+        features: ['2–8 Spieler', 'Ab 18 Jahren', 'ca. 30 Min', 'Reaktion'],
+        acc: {
+          ablauf: 'Reihum werden Karten aufgedeckt. Sobald die Bedingung eintritt, heißt es: schneller sein als der Rest. Wer patzt oder zu langsam ist, muss trinken. Klingt simpel – eskaliert garantiert.',
+          lieferumfang: 'Spielkarten, kompakte Verpackung im Party-Peak-Format und eine kurze, klare Spielanleitung. Passt in jede Tasche und ist sofort startklar.',
+          fuerWen: 'Für Partys, Vorglühen und alle, die schnelle, unkomplizierte Trinkspiele mögen. Ab 18 Jahren – bitte verantwortungsbewusst genießen.'
+        }
+      },
+      {
+        name: 'Vollidiot', tag: 'Trinkspiel · Party', tint: '#232019', imgSize: '80%',
+        img: 'assets/vollidiot.png', url: 'https://www.amazon.de/dp/B0FPQXVNCP',
+        teaser: 'Das Trinkspiel für alle, die gern mal danebenliegen. Ehrlich, laut und garantiert eskalierend.',
+        longDesc: 'Das Trinkspiel für alle, die gern mal danebenliegen. Ehrliche Fragen, freche Aufgaben und jede Menge Situationen, in denen ihr euch besser kennenlernt, als euch lieb ist.',
+        features: ['3–10 Spieler', 'Ab 18 Jahren', 'ca. 45 Min', 'Party'],
+        acc: {
+          ablauf: 'Karte ziehen, Aufgabe oder Frage vorlesen, machen – oder trinken. Von harmlos bis grenzwertig ist alles dabei. Ihr bestimmt selbst, wie weit die Runde geht.',
+          lieferumfang: 'Kartendeck im Neon-Design, robuste Box und eine Spielanleitung. Direkt auspacken und loslegen – ohne Vorbereitung.',
+          fuerWen: 'Für Freundeskreise mit Humor, WG-Abende und alle, die es gern etwas frecher mögen. Ab 18 Jahren.'
+        }
+      },
+      {
+        name: 'Wer zum Teufel?', tag: 'Teamspiel · 3–6 Spieler', tint: '#232019', imgSize: '100%',
+        img: 'assets/wer-zum-teufel.png', url: 'https://www.amazon.de/dp/B0H6VMKSLR',
+        teaser: 'Gleiche Antwort wie dein Team – oder der Teufel holt euch. Das Partyspiel, das Freundschaften testet.',
+        longDesc: 'Das Teamspiel, bei dem ihr auf einer Wellenlänge sein müsst: Wählt ihr dieselbe Person – oder holt euch der Teufel? Ein Spiel voller Aha-Momente, Diskussionen und Gelächter.',
+        features: ['3–6 Spieler', 'Ab 16 Jahren', 'ca. 20 Min', 'Teamspiel'],
+        acc: {
+          ablauf: 'Eine Frage, mehrere Verdächtige aus eurer Runde. Alle tippen gleichzeitig – stimmt ihr überein, gewinnt das Team, sonst holt euch der Teufel. Wer kennt wen wirklich am besten?',
+          lieferumfang: 'Fragekarten, Abstimmungs-Material, Teufels-Box im Party-Peak-Look und die Spielanleitung. Alles dabei für den sofortigen Start.',
+          fuerWen: 'Für Gruppen von 3 bis 6 Personen, Spieleabende und Menschen, die sich gut kennen – oder es herausfinden wollen. Ab 16 Jahren.'
+        }
+      }
+    ];
+  }
+
+  renderVals() {
+    const isHome = this.state.route === 'home';
+    const products = this.PRODUCTS.map((p, i) => ({ ...p, open: () => this.openDetail(i) }));
+
+    let detail = null;
+    if (!isHome) {
+      const p = this.PRODUCTS[this.state.route];
+      const imgs = [
+        { src: p.img, tint: p.tint },
+        { src: null, tint: '#201D1A' },
+        { src: null, tint: '#201D1A' },
+        { src: null, tint: '#201D1A' }
+      ].map((im, idx) => ({
+        src: im.src,
+        isPlaceholder: !im.src,
+        tint: im.tint,
+        border: idx === this.state.activeImg ? '#F97717' : 'rgba(255,255,255,.1)',
+        select: () => this.setState({ activeImg: idx })
+      }));
+      const cur = imgs[this.state.activeImg] || imgs[0];
+      const accDefs = [
+        { key: 'ablauf', title: 'Spielablauf', body: p.acc.ablauf },
+        { key: 'lieferumfang', title: 'Lieferumfang', body: p.acc.lieferumfang },
+        { key: 'fuerWen', title: 'Für wen?', body: p.acc.fuerWen }
+      ];
+      detail = {
+        name: p.name, tag: p.tag, longDesc: p.longDesc, url: p.url,
+        features: p.features,
+        imgs,
+        mainTint: cur.tint,
+        mainSrc: cur.src,
+        mainPlaceholder: !cur.src,
+        accordions: accDefs.map(a => ({
+          title: a.title, body: a.body,
+          open: this.state.openAcc === a.key,
+          icon: this.state.openAcc === a.key ? '–' : '+',
+          toggle: () => this.toggleAcc(a.key)
+        }))
+      };
+    }
+
+    return {
+      isHome,
+      isDetail: !isHome,
+      products,
+      detail,
+      showValueStrip: this.props.showValueStrip ?? true,
+      heroRef: (el) => { this.heroEl = el; this.applyTheme(); },
+      produkteRef: (el) => { this.produkteEl = el; },
+      goHome: () => this.goHome(),
+      goToProdukte: () => this.goToProdukte()
+    };
+  }
+}
+</script>
+</body>
+</html>
