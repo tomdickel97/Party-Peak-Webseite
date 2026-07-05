@@ -156,7 +156,7 @@
             <div style="position:absolute;left:19%;right:19%;bottom:11%;height:8%;background:linear-gradient(180deg,#a9793f 0%,#6e4e29 100%);border-bottom-left-radius:50% 60%;border-bottom-right-radius:50% 60%"></div>
             <div style="position:absolute;left:19%;right:19%;bottom:16%;height:13%;border-radius:50%;background:radial-gradient(120% 150% at 50% 22%,#eccc93 0%,#c99f62 62%,#ab8149 100%);box-shadow:inset 0 3px 6px rgba(255,240,210,.4), inset 0 -6px 12px rgba(0,0,0,.28)"></div>
             <div style="position:absolute;left:30%;right:30%;bottom:20%;height:5%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.5),rgba(0,0,0,0));filter:blur(3px)"></div>
-            <img src="{{ p.img }}" alt="{{ p.name }}" style="position:relative;z-index:2;width:{{ p.imgSize }};height:{{ p.imgSize }};object-fit:contain;transform:translate({{ p.imgShift }},-9%);filter:drop-shadow(0 20px 26px rgba(0,0,0,.5))">
+            <img src="{{ p.cover }}" alt="{{ p.name }}" style="position:relative;z-index:2;width:{{ p.imgSize }};height:{{ p.imgSize }};object-fit:contain;transform:translate({{ p.imgShift }},-9%);filter:drop-shadow(0 20px 26px rgba(0,0,0,.5))">
           </div>
           <div style="padding:24px 24px 26px;display:flex;flex-direction:column;flex:1">
             <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#C99A5E;margin-bottom:8px">{{ p.tag }}</div>
@@ -235,8 +235,10 @@
               <span style="font-family:ui-monospace,Menlo,monospace;font-size:13px;letter-spacing:.12em;color:#8A7862">BEISPIELBILD</span>
             </div>
           </sc-if>
+          <sc-if value="{{ detail.hasMultiple }}" hint-placeholder-val="{{ true }}">
           <button onClick="{{ detail.prevImg }}" aria-label="Vorheriges Bild" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(23,23,23,.55);color:#fff;font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);box-shadow:0 4px 12px rgba(0,0,0,.4);transition:background .15s" onMouseOver="this.style.background='#F97717'" onMouseOut="this.style.background='rgba(23,23,23,.55)'">‹</button>
           <button onClick="{{ detail.nextImg }}" aria-label="Nächstes Bild" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(23,23,23,.55);color:#fff;font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);box-shadow:0 4px 12px rgba(0,0,0,.4);transition:background .15s" onMouseOver="this.style.background='#F97717'" onMouseOut="this.style.background='rgba(23,23,23,.55)'">›</button>
+          </sc-if>
         </div>
       </div>
 
@@ -510,7 +512,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;heroTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Orange&quot;,&quot;Rot&quot;,&quot;Sonnenuntergang&quot;],&quot;default&quot;:&quot;Orange&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;showValueStrip&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
 class Component extends DCLogic {
-  state = { route: this.routeFromHash(), activeImg: 0, openAcc: 'ablauf', openFaq: null, cookieOpen: false, cookieDecided: true };
+  state = { route: this.routeFromHash(), activeImg: 0, openAcc: 'ablauf', openFaq: null, galleries: {}, cookieOpen: false, cookieDecided: true };
 
   applyTheme() {
     const el = this.heroEl;
@@ -529,6 +531,8 @@ class Component extends DCLogic {
     window.addEventListener('hashchange', this._hashHandler);
     this.syncMeta(this.state.route);
     this.injectJsonLd();
+    // Falls direkt eine Produktseite geöffnet wurde: Galerie-Bilder suchen
+    if (typeof this.state.route === 'number') this.probeGallery(this.state.route);
     // --- Cookie-Consent (nur notwendige Cookies) ---
     let decided = false;
     try {
@@ -561,7 +565,10 @@ class Component extends DCLogic {
   goFaq() { this.go('faq'); }
   toggleAcc(key) { this.setState(s => ({ openAcc: s.openAcc === key ? null : key })); }
   toggleFaq(i) { this.setState(s => ({ openFaq: s.openFaq === i ? null : i })); }
-  stepImg(dir) { this.setState(s => ({ activeImg: (s.activeImg + dir + 7) % 7 })); }
+  stepImg(dir) {
+    const count = Math.max(1, this.galleryFor(this.state.route).length);
+    this.setState(s => ({ activeImg: (s.activeImg + dir + count) % count }));
+  }
   goToProdukte() {
     const scrollToSec = () => setTimeout(() => { if (this.produkteEl) window.scrollTo({ top: this.produkteEl.offsetTop - 20, behavior: 'smooth' }); }, 60);
     if (this.state.route !== 'home') { this.go('home'); setTimeout(scrollToSec, 90); }
@@ -617,7 +624,66 @@ class Component extends DCLogic {
     if (typeof route === 'number') { patch.activeImg = 0; patch.openAcc = 'ablauf'; }
     this.setState(patch);
     this.syncMeta(route);
+    if (typeof route === 'number') this.probeGallery(route);
     window.scrollTo(0, 0);
+  }
+
+  // ---------- Automatisches Laden der Galerie-Bilder aus GitHub/assets ----------
+  //
+  // BENENNUNG DEINER BILDER (im Ordner /assets):
+  //   <imgBase><Nummer>.<endung>   z. B.  Tipsy1.png, Tipsy2.png, Tipsy3.png
+  //
+  //   - <imgBase> steht je Produkt unten in PRODUCTS (z. B. 'Tipsy', 'Vollidiot', 'Teufel').
+  //   - Nummeriere LÜCKENLOS ab 1 (Tipsy1, Tipsy2, Tipsy3 …). Bei der ersten fehlenden
+  //     Nummer stoppt die Suche.
+  //   - Erlaubte Endungen: png (empfohlen), jpg, jpeg, webp.
+  //   - Groß-/Kleinschreibung ist auf GitHub/Vercel wichtig: 'Tipsy1.png' ist NICHT
+  //     dasselbe wie 'tipsy1.png'. Genau so benennen wie der imgBase.
+  //   - Bild Nr. 1 (z. B. Tipsy1.png) ist gleichzeitig das Titelbild auf der Karte.
+  //
+  GALLERY_MAX = 20;
+  GALLERY_EXTS = ['png', 'jpg', 'jpeg', 'webp'];
+
+  loadImage(url) {
+    return new Promise((resolve) => {
+      if (typeof Image === 'undefined') { resolve(false); return; }
+      const img = new Image();
+      img.onload = () => resolve(img.naturalWidth > 0);
+      img.onerror = () => resolve(false);
+      img.src = url;
+    });
+  }
+  async findImageForIndex(base, n) {
+    for (const ext of this.GALLERY_EXTS) {
+      const url = 'assets/' + base + n + '.' + ext;
+      if (await this.loadImage(url)) return url;
+    }
+    return null;
+  }
+  async probeGallery(i) {
+    const p = this.PRODUCTS[i];
+    if (!p || !p.imgBase) return;
+    if (this.state.galleries[i]) return;          // schon geladen
+    this._probing = this._probing || {};
+    if (this._probing[i]) return;                 // läuft bereits
+    this._probing[i] = true;
+    const found = [];
+    for (let n = 1; n <= this.GALLERY_MAX; n++) {
+      const url = await this.findImageForIndex(p.imgBase, n);
+      if (!url) break;                            // erste Lücke -> Ende
+      found.push(url);
+    }
+    const list = found.length ? found : (p.img ? [p.img] : []);
+    this.setState({ galleries: Object.assign({}, this.state.galleries, { [i]: list }) });
+  }
+
+  galleryFor(i) {
+    const p = this.PRODUCTS[i];
+    if (!p) return [];
+    const disc = this.state.galleries[i];
+    if (disc && disc.length) return disc;
+    if (p.gallery && p.gallery.length) return p.gallery;   // manuelle Liste möglich
+    return p.img ? [p.img] : [];
   }
 
   // ---------- Per-Route Titel/Meta (für SPA-UX & Google-JS-Rendering) ----------
@@ -713,7 +779,7 @@ class Component extends DCLogic {
     return [
       {
         name: 'Tipsy Horses', tag: 'Trinkspiel · Reaktion', tint: '#232019', imgSize: '80%', imgShift: '0%', uvp: '9,99 €',
-        img: 'assets/tipsy-horses.png', url: 'https://www.amazon.de/dp/B0DGFFNQL5',
+        imgBase: 'Tipsy', img: 'assets/tipsy-horses.png', url: 'https://www.amazon.de/dp/B0DGFFNQL5',
         teaser: 'Das schnelle Reaktions-Trinkspiel, das jede Party in den Galopp bringt. Wer zu langsam ist, trinkt.',
         longDesc: 'Das schnelle Reaktions-Trinkspiel für die ganze Runde. Karten aufdecken, blitzschnell reagieren – wer zögert, trinkt. Der Renner auf jeder Party, in unter zwei Minuten erklärt.',
         features: ['2–8 Spieler', 'Ab 18 Jahren', 'ca. 30 Min', 'Reaktion'],
@@ -725,7 +791,7 @@ class Component extends DCLogic {
       },
       {
         name: 'Vollidiot', tag: 'Trinkspiel · Party', tint: '#232019', imgSize: '80%', imgShift: '0%', uvp: '12,99 €',
-        img: 'assets/vollidiot.png', url: 'https://www.amazon.de/dp/B0FPQXVNCP',
+        imgBase: 'Vollidiot', img: 'assets/vollidiot.png', url: 'https://www.amazon.de/dp/B0FPQXVNCP',
         teaser: 'Das Trinkspiel für alle, die gern mal danebenliegen. Ehrlich, laut und garantiert eskalierend.',
         longDesc: 'Das Trinkspiel für alle, die gern mal danebenliegen. Ehrliche Fragen, freche Aufgaben und jede Menge Situationen, in denen ihr euch besser kennenlernt, als euch lieb ist.',
         features: ['3–10 Spieler', 'Ab 18 Jahren', 'ca. 45 Min', 'Party'],
@@ -737,7 +803,7 @@ class Component extends DCLogic {
       },
       {
         name: 'Wer zum Teufel?', tag: 'Teamspiel · 3–6 Spieler', tint: '#232019', imgSize: '100%', imgShift: '-9%', uvp: '19,99 €',
-        img: 'assets/wer-zum-teufel.png', url: 'https://www.amazon.de/dp/B0H6VMKSLR',
+        imgBase: 'Teufel', img: 'assets/wer-zum-teufel.png', url: 'https://www.amazon.de/dp/B0H6VMKSLR',
         teaser: 'Gleiche Antwort wie dein Team – oder der Teufel holt euch. Das Partyspiel, das Freundschaften testet.',
         longDesc: 'Das Teamspiel, bei dem ihr auf einer Wellenlänge sein müsst: Wählt ihr dieselbe Person – oder holt euch der Teufel? Ein Spiel voller Aha-Momente, Diskussionen und Gelächter.',
         features: ['3–6 Spieler', 'Ab 16 Jahren', 'ca. 20 Min', 'Teamspiel'],
@@ -817,24 +883,22 @@ class Component extends DCLogic {
     const isUeber = this.state.route === 'ueber';
     const isFaq = this.state.route === 'faq';
     const isDetail = typeof this.state.route === 'number';
-    const products = this.PRODUCTS.map((p, i) => ({ ...p, open: () => this.openDetail(i) }));
+    const products = this.PRODUCTS.map((p, i) => ({ ...p, cover: p.img || ('assets/' + p.imgBase + '1.png'), open: () => this.openDetail(i) }));
 
     let detail = null;
     if (isDetail) {
       const p = this.PRODUCTS[this.state.route];
-      const realImgs = (p.gallery && p.gallery.length) ? p.gallery : [p.img];
-      const imgs = [];
-      for (let i = 0; i < 7; i++) {
-        const src = realImgs[i] || null;
-        imgs.push({
-          src,
-          isPlaceholder: !src,
-          tint: src ? p.tint : '#201D1A',
-          border: i === this.state.activeImg ? '#F97717' : 'rgba(255,255,255,.1)',
-          select: () => this.setState({ activeImg: i })
-        });
-      }
-      const cur = imgs[this.state.activeImg] || imgs[0];
+      const realImgs = this.galleryFor(this.state.route);
+      const count = realImgs.length;
+      const activeIdx = count ? Math.min(this.state.activeImg, count - 1) : 0;
+      const imgs = realImgs.map((src, i) => ({
+        src,
+        isPlaceholder: !src,
+        tint: p.tint,
+        border: i === activeIdx ? '#F97717' : 'rgba(255,255,255,.1)',
+        select: () => this.setState({ activeImg: i })
+      }));
+      const cur = imgs[activeIdx] || imgs[0] || { src: p.img, tint: p.tint };
       const accDefs = [
         { key: 'ablauf', title: 'Spielablauf', body: p.acc.ablauf },
         { key: 'lieferumfang', title: 'Lieferumfang', body: p.acc.lieferumfang },
@@ -844,6 +908,7 @@ class Component extends DCLogic {
         name: p.name, tag: p.tag, longDesc: p.longDesc, url: p.url, uvp: p.uvp,
         features: p.features,
         imgs,
+        hasMultiple: count > 1,
         mainTint: cur.tint,
         mainSrc: cur.src,
         mainPlaceholder: !cur.src,
