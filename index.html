@@ -179,7 +179,7 @@
       <sc-for list="{{ products }}" as="p" hint-placeholder-count="3">
         <div onClick="{{ p.open }}" style="display:flex;flex-direction:column;background:#201D1A;border:1px solid rgba(255,255,255,.08);border-radius:24px;overflow:hidden;cursor:pointer;box-shadow:0 18px 40px -22px rgba(0,0,0,.8);transition:transform .18s, box-shadow .18s" onMouseOver="this.style.transform='translateY(-4px)';this.style.boxShadow='0 30px 50px -24px rgba(0,0,0,.9)';this.style.borderColor='rgba(249,119,23,.4)'" onMouseOut="this.style.transform='none';this.style.boxShadow='0 18px 40px -22px rgba(0,0,0,.8)';this.style.borderColor='rgba(255,255,255,.08)'">
           <div style="position:relative;background:radial-gradient(92% 72% at 50% 15%, rgba(255,206,142,.5) 0%, rgba(255,206,142,0) 62%), linear-gradient(180deg,#4a3620 0%,#2c2015 62%,#191410 100%);display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;overflow:hidden">
-            <img src="{{ p.cover }}" alt="{{ p.name }}" style="position:relative;z-index:2;width:{{ p.imgSize }};height:{{ p.imgSize }};object-fit:contain;transform:translate({{ p.imgShift }},0);filter:drop-shadow(0 20px 26px rgba(0,0,0,.5))">
+            <img src="{{ p.cover }}" alt="{{ p.name }}" onError="{{ p.coverError }}" style="position:relative;z-index:2;width:{{ p.imgSize }};height:{{ p.imgSize }};object-fit:contain;transform:translate({{ p.imgShift }},0);filter:drop-shadow(0 20px 26px rgba(0,0,0,.5))">
           </div>
           <div style="padding:24px 24px 26px;display:flex;flex-direction:column;flex:1">
             <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#C99A5E;margin-bottom:8px">{{ p.tag }}</div>
@@ -241,7 +241,7 @@
           <sc-for list="{{ detail.imgs }}" as="im" hint-placeholder-count="4">
             <div onClick="{{ im.select }}" class="pp-thumb" style="aspect-ratio:1/1;border-radius:14px;overflow:hidden;cursor:pointer;background:{{ im.tint }};border:2px solid {{ im.border }};display:flex;align-items:center;justify-content:center;padding:0">
               <sc-if value="{{ im.src }}" hint-placeholder-val="{{ true }}">
-                <img src="{{ im.src }}" alt="" style="width:100%;height:100%;object-fit:cover">
+                <img src="{{ im.src }}" alt="" onError="{{ im.onError }}" style="width:100%;height:100%;object-fit:cover">
               </sc-if>
               <sc-if value="{{ im.isPlaceholder }}" hint-placeholder-val="{{ false }}">
                 <span style="font-family:ui-monospace,Menlo,monospace;font-size:8px;letter-spacing:.08em;color:#B08A5E">BILD</span>
@@ -251,7 +251,7 @@
         </div>
         <div class="pp-main-img" style="position:relative;aspect-ratio:1/1;border-radius:24px;overflow:hidden;background:{{ detail.mainTint }};border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;padding:0">
           <sc-if value="{{ detail.mainSrc }}" hint-placeholder-val="{{ true }}">
-            <img src="{{ detail.mainSrc }}" alt="{{ detail.name }}" style="width:100%;height:100%;object-fit:cover">
+            <img src="{{ detail.mainSrc }}" alt="{{ detail.name }}" onError="{{ detail.mainError }}" style="width:100%;height:100%;object-fit:cover">
           </sc-if>
           <sc-if value="{{ detail.mainPlaceholder }}" hint-placeholder-val="{{ false }}">
             <div style="width:100%;height:100%;border-radius:14px;background:repeating-linear-gradient(45deg,#262320,#262320 14px,#201D1A 14px,#201D1A 28px);display:flex;align-items:center;justify-content:center">
@@ -535,7 +535,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;heroTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Orange&quot;,&quot;Rot&quot;,&quot;Sonnenuntergang&quot;],&quot;default&quot;:&quot;Orange&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;showValueStrip&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
 class Component extends DCLogic {
-  state = { route: this.routeFromHash(), activeImg: 0, openAcc: 'ablauf', openFaq: null, galleries: {}, cookieOpen: false, cookieDecided: true };
+  state = { route: this.routeFromHash(), activeImg: 0, openAcc: 'ablauf', openFaq: null, brokenImgs: {}, cookieOpen: false, cookieDecided: true };
 
   applyTheme() {
     const el = this.heroEl;
@@ -554,8 +554,6 @@ class Component extends DCLogic {
     window.addEventListener('hashchange', this._hashHandler);
     this.syncMeta(this.state.route);
     this.injectJsonLd();
-    // Falls direkt eine Produktseite geöffnet wurde: Galerie-Bilder suchen
-    if (typeof this.state.route === 'number') this.probeGallery(this.state.route);
     // --- Cookie-Consent (nur notwendige Cookies) ---
     let decided = false;
     try {
@@ -647,66 +645,35 @@ class Component extends DCLogic {
     if (typeof route === 'number') { patch.activeImg = 0; patch.openAcc = 'ablauf'; }
     this.setState(patch);
     this.syncMeta(route);
-    if (typeof route === 'number') this.probeGallery(route);
     window.scrollTo(0, 0);
   }
 
-  // ---------- Automatisches Laden der Galerie-Bilder aus GitHub/assets ----------
+  // ---------- Feste Galerie-Bilder (statisch, kein Live-Check) ----------
   //
   // BENENNUNG DEINER BILDER (im Ordner /assets):
-  //   <imgBase><Nummer>.<endung>   z. B.  Tipsy1.png, Tipsy2.png, Tipsy3.png
+  //   <imgBase><Nummer>.png   z. B.  Tipsy1.png, Tipsy2.png, … Tipsy8.png
   //
-  //   - <imgBase> steht je Produkt unten in PRODUCTS (z. B. 'Tipsy', 'Vollidiot', 'Teufel').
-  //   - Nummeriere LÜCKENLOS ab 1 (Tipsy1, Tipsy2, Tipsy3 …). Bei der ersten fehlenden
-  //     Nummer stoppt die Suche.
-  //   - Erlaubte Endungen: png (empfohlen), jpg, jpeg, webp.
-  //   - Groß-/Kleinschreibung ist auf GitHub/Vercel wichtig: 'Tipsy1.png' ist NICHT
-  //     dasselbe wie 'tipsy1.png'. Genau so benennen wie der imgBase.
-  //   - Bild Nr. 1 (z. B. Tipsy1.png) ist gleichzeitig das Titelbild auf der Karte.
+  //   - <imgBase> und imgCount stehen je Produkt unten in PRODUCTS.
+  //   - imgCount = wie viele Bilder das Spiel hat (Standard 8 = 1 Hauptbild + 7 weitere).
+  //   - Bild Nr. 1 (z. B. Tipsy1.png) ist zugleich das Titelbild auf der Karte.
+  //   - Endung immer .png. Groß-/Kleinschreibung zählt: 'Tipsy1.png' ≠ 'tipsy1.png'.
+  //   - Fehlt eine Datei, wird sie einfach ausgeblendet (kein kaputtes Bild-Icon).
   //
-  GALLERY_MAX = 20;
-  GALLERY_EXTS = ['png', 'jpg', 'jpeg', 'webp'];
-
-  loadImage(url) {
-    return new Promise((resolve) => {
-      if (typeof Image === 'undefined') { resolve(false); return; }
-      const img = new Image();
-      img.onload = () => resolve(img.naturalWidth > 0);
-      img.onerror = () => resolve(false);
-      img.src = url;
-    });
+  markBroken(url) {
+    if (!url || this.state.brokenImgs[url]) return;
+    this.setState(s => ({ brokenImgs: Object.assign({}, s.brokenImgs, { [url]: true }) }));
   }
-  async findImageForIndex(base, n) {
-    for (const ext of this.GALLERY_EXTS) {
-      const url = 'assets/' + base + n + '.' + ext;
-      if (await this.loadImage(url)) return url;
-    }
-    return null;
-  }
-  async probeGallery(i) {
-    const p = this.PRODUCTS[i];
-    if (!p || !p.imgBase) return;
-    if (this.state.galleries[i]) return;          // schon geladen
-    this._probing = this._probing || {};
-    if (this._probing[i]) return;                 // läuft bereits
-    this._probing[i] = true;
-    const found = [];
-    for (let n = 1; n <= this.GALLERY_MAX; n++) {
-      const url = await this.findImageForIndex(p.imgBase, n);
-      if (!url) break;                            // erste Lücke -> Ende
-      found.push(url);
-    }
-    const list = found.length ? found : (p.img ? [p.img] : []);
-    this.setState({ galleries: Object.assign({}, this.state.galleries, { [i]: list }) });
-  }
-
   galleryFor(i) {
     const p = this.PRODUCTS[i];
     if (!p) return [];
-    const disc = this.state.galleries[i];
-    if (disc && disc.length) return disc;
-    if (p.gallery && p.gallery.length) return p.gallery;   // manuelle Liste möglich
-    return p.img ? [p.img] : [];
+    let list;
+    if (p.gallery && p.gallery.length) list = p.gallery;            // optionale manuelle Liste
+    else if (p.imgBase) {
+      const n = p.imgCount || 8;
+      list = [];
+      for (let k = 1; k <= n; k++) list.push('assets/' + p.imgBase + k + '.png');
+    } else list = p.img ? [p.img] : [];
+    return list.filter(u => !this.state.brokenImgs[u]);             // fehlende ausblenden
   }
 
   // ---------- Per-Route Titel/Meta (für SPA-UX & Google-JS-Rendering) ----------
@@ -802,7 +769,7 @@ class Component extends DCLogic {
     return [
       {
         name: 'Tipsy Horses', tag: 'Trinkspiel · Reaktion', tint: '#232019', imgSize: '80%', imgShift: '0%', uvp: '9,99 €',
-        imgBase: 'Tipsy', img: 'assets/Tipsy1.png', url: 'https://www.amazon.de/dp/B0DGFFNQL5',
+        imgBase: 'Tipsy', imgCount: 8, img: 'assets/Tipsy1.png', url: 'https://www.amazon.de/dp/B0DGFFNQL5',
         teaser: 'Das schnelle Reaktions-Trinkspiel, das jede Party in den Galopp bringt. Wer zu langsam ist, trinkt.',
         longDesc: 'Das schnelle Reaktions-Trinkspiel für die ganze Runde. Karten aufdecken, blitzschnell reagieren – wer zögert, trinkt. Der Renner auf jeder Party, in unter zwei Minuten erklärt.',
         features: ['2–8 Spieler', 'Ab 18 Jahren', 'ca. 30 Min', 'Reaktion'],
@@ -814,7 +781,7 @@ class Component extends DCLogic {
       },
       {
         name: 'Vollidiot', tag: 'Trinkspiel · Party', tint: '#232019', imgSize: '80%', imgShift: '0%', uvp: '12,99 €',
-        imgBase: 'Vollidiot', img: 'assets/Vollidiot1.png', url: 'https://www.amazon.de/dp/B0FPQXVNCP',
+        imgBase: 'Vollidiot', imgCount: 8, img: 'assets/Vollidiot1.png', url: 'https://www.amazon.de/dp/B0FPQXVNCP',
         teaser: 'Das Trinkspiel für alle, die gern mal danebenliegen. Ehrlich, laut und garantiert eskalierend.',
         longDesc: 'Das Trinkspiel für alle, die gern mal danebenliegen. Ehrliche Fragen, freche Aufgaben und jede Menge Situationen, in denen ihr euch besser kennenlernt, als euch lieb ist.',
         features: ['3–10 Spieler', 'Ab 18 Jahren', 'ca. 45 Min', 'Party'],
@@ -826,7 +793,7 @@ class Component extends DCLogic {
       },
       {
         name: 'Wer zum Teufel?', tag: 'Teamspiel · 3–6 Spieler', tint: '#232019', imgSize: '100%', imgShift: '-9%', uvp: '19,99 €',
-        imgBase: 'Teufel', img: 'assets/Teufel1.png', url: 'https://www.amazon.de/dp/B0H6VMKSLR',
+        imgBase: 'Teufel', imgCount: 8, img: 'assets/Teufel1.png', url: 'https://www.amazon.de/dp/B0H6VMKSLR',
         teaser: 'Gleiche Antwort wie dein Team – oder der Teufel holt euch. Das Partyspiel, das Freundschaften testet.',
         longDesc: 'Das Teamspiel, bei dem ihr auf einer Wellenlänge sein müsst: Wählt ihr dieselbe Person – oder holt euch der Teufel? Ein Spiel voller Aha-Momente, Diskussionen und Gelächter.',
         features: ['3–6 Spieler', 'Ab 16 Jahren', 'ca. 20 Min', 'Teamspiel'],
@@ -906,7 +873,7 @@ class Component extends DCLogic {
     const isUeber = this.state.route === 'ueber';
     const isFaq = this.state.route === 'faq';
     const isDetail = typeof this.state.route === 'number';
-    const products = this.PRODUCTS.map((p, i) => ({ ...p, cover: p.img || ('assets/' + p.imgBase + '1.png'), open: () => this.openDetail(i) }));
+    const products = this.PRODUCTS.map((p, i) => ({ ...p, cover: p.img || ('assets/' + p.imgBase + '1.png'), coverError: (e) => { if (e && e.target) e.target.style.visibility = 'hidden'; }, open: () => this.openDetail(i) }));
 
     let detail = null;
     if (isDetail) {
@@ -919,6 +886,7 @@ class Component extends DCLogic {
         isPlaceholder: !src,
         tint: p.tint,
         border: i === activeIdx ? '#F97717' : 'rgba(255,255,255,.1)',
+        onError: () => this.markBroken(src),
         select: () => this.setState({ activeImg: i })
       }));
       const cur = imgs[activeIdx] || imgs[0] || { src: p.img, tint: p.tint };
@@ -935,6 +903,7 @@ class Component extends DCLogic {
         mainTint: cur.tint,
         mainSrc: cur.src,
         mainPlaceholder: !cur.src,
+        mainError: () => this.markBroken(cur.src),
         prevImg: () => this.stepImg(-1),
         nextImg: () => this.stepImg(1),
         accordions: accDefs.map(a => ({
