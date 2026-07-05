@@ -153,10 +153,8 @@
       <sc-for list="{{ products }}" as="p" hint-placeholder-count="3">
         <div onClick="{{ p.open }}" style="display:flex;flex-direction:column;background:#201D1A;border:1px solid rgba(255,255,255,.08);border-radius:24px;overflow:hidden;cursor:pointer;box-shadow:0 18px 40px -22px rgba(0,0,0,.8);transition:transform .18s, box-shadow .18s" onMouseOver="this.style.transform='translateY(-4px)';this.style.boxShadow='0 30px 50px -24px rgba(0,0,0,.9)';this.style.borderColor='rgba(249,119,23,.4)'" onMouseOut="this.style.transform='none';this.style.boxShadow='0 18px 40px -22px rgba(0,0,0,.8)';this.style.borderColor='rgba(255,255,255,.08)'">
           <div style="position:relative;background:radial-gradient(92% 72% at 50% 15%, rgba(255,206,142,.5) 0%, rgba(255,206,142,0) 62%), linear-gradient(180deg,#4a3620 0%,#2c2015 62%,#191410 100%);display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;overflow:hidden">
-            <div style="position:absolute;left:19%;right:19%;bottom:11%;height:8%;background:linear-gradient(180deg,#a9793f 0%,#6e4e29 100%);border-bottom-left-radius:50% 60%;border-bottom-right-radius:50% 60%"></div>
-            <div style="position:absolute;left:19%;right:19%;bottom:16%;height:13%;border-radius:50%;background:radial-gradient(120% 150% at 50% 22%,#eccc93 0%,#c99f62 62%,#ab8149 100%);box-shadow:inset 0 3px 6px rgba(255,240,210,.4), inset 0 -6px 12px rgba(0,0,0,.28)"></div>
-            <div style="position:absolute;left:30%;right:30%;bottom:20%;height:5%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.5),rgba(0,0,0,0));filter:blur(3px)"></div>
-            <img src="{{ p.cover }}" alt="{{ p.name }}" style="position:relative;z-index:2;width:{{ p.imgSize }};height:{{ p.imgSize }};object-fit:contain;transform:translate({{ p.imgShift }},-9%);filter:drop-shadow(0 20px 26px rgba(0,0,0,.5))">
+            <img src="{{ p.cover }}" alt="{{ p.name }}" style="position:relative;z-index:2;width:{{ p.imgSize }};height:{{ p.imgSize }};object-fit:contain;transform:translate({{ p.imgShift }},0);filter:drop-shadow(0 20px 26px rgba(0,0,0,.5))">
+          </div>
           </div>
           <div style="padding:24px 24px 26px;display:flex;flex-direction:column;flex:1">
             <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#C99A5E;margin-bottom:8px">{{ p.tag }}</div>
@@ -779,7 +777,7 @@ class Component extends DCLogic {
     return [
       {
         name: 'Tipsy Horses', tag: 'Trinkspiel · Reaktion', tint: '#232019', imgSize: '80%', imgShift: '0%', uvp: '9,99 €',
-        imgBase: 'Tipsy', img: 'assets/tipsy-horses.png', url: 'https://www.amazon.de/dp/B0DGFFNQL5',
+        imgBase: 'Tipsy', img: 'assets/Tipsy1.png', url: 'https://www.amazon.de/dp/B0DGFFNQL5',
         teaser: 'Das schnelle Reaktions-Trinkspiel, das jede Party in den Galopp bringt. Wer zu langsam ist, trinkt.',
         longDesc: 'Das schnelle Reaktions-Trinkspiel für die ganze Runde. Karten aufdecken, blitzschnell reagieren – wer zögert, trinkt. Der Renner auf jeder Party, in unter zwei Minuten erklärt.',
         features: ['2–8 Spieler', 'Ab 18 Jahren', 'ca. 30 Min', 'Reaktion'],
@@ -791,7 +789,7 @@ class Component extends DCLogic {
       },
       {
         name: 'Vollidiot', tag: 'Trinkspiel · Party', tint: '#232019', imgSize: '80%', imgShift: '0%', uvp: '12,99 €',
-        imgBase: 'Vollidiot', img: 'assets/vollidiot.png', url: 'https://www.amazon.de/dp/B0FPQXVNCP',
+        imgBase: 'Vollidiot', img: 'assets/Vollidiot1.png', url: 'https://www.amazon.de/dp/B0FPQXVNCP',
         teaser: 'Das Trinkspiel für alle, die gern mal danebenliegen. Ehrlich, laut und garantiert eskalierend.',
         longDesc: 'Das Trinkspiel für alle, die gern mal danebenliegen. Ehrliche Fragen, freche Aufgaben und jede Menge Situationen, in denen ihr euch besser kennenlernt, als euch lieb ist.',
         features: ['3–10 Spieler', 'Ab 18 Jahren', 'ca. 45 Min', 'Party'],
@@ -803,7 +801,7 @@ class Component extends DCLogic {
       },
       {
         name: 'Wer zum Teufel?', tag: 'Teamspiel · 3–6 Spieler', tint: '#232019', imgSize: '100%', imgShift: '-9%', uvp: '19,99 €',
-        imgBase: 'Teufel', img: 'assets/wer-zum-teufel.png', url: 'https://www.amazon.de/dp/B0H6VMKSLR',
+        imgBase: 'Teufel', img: 'assets/Teufel1.png', url: 'https://www.amazon.de/dp/B0H6VMKSLR',
         teaser: 'Gleiche Antwort wie dein Team – oder der Teufel holt euch. Das Partyspiel, das Freundschaften testet.',
         longDesc: 'Das Teamspiel, bei dem ihr auf einer Wellenlänge sein müsst: Wählt ihr dieselbe Person – oder holt euch der Teufel? Ein Spiel voller Aha-Momente, Diskussionen und Gelächter.',
         features: ['3–6 Spieler', 'Ab 16 Jahren', 'ca. 20 Min', 'Teamspiel'],
