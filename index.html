@@ -4,6 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!-- ============ PERFORMANCE: Runtime-Skripte & Kernbilder früh laden ============ -->
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preload" href="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" as="script" crossorigin fetchpriority="high">
+<link rel="preload" href="https://unpkg.com/react@18.3.1/umd/react.production.min.js" as="script" crossorigin>
+<link rel="preload" href="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" as="script" crossorigin>
+<link rel="preload" href="assets/logo.png" as="image">
+<link rel="preload" href="assets/hero-party.png" as="image">
+<link rel="preload" href="assets/Tipsy1.png" as="image">
+<link rel="preload" href="assets/Vollidiot1.png" as="image">
+<link rel="preload" href="assets/Teufel1.png" as="image">
+
 <!-- ============ SEO / META (statisch – wird von JS-losen Crawlern gelesen) ============ -->
 <title>Party Peak – Party- & Trinkspiele mit Suchtfaktor</title>
 <meta name="description" content="Party- und Trinkspiele mit Suchtfaktor – schnell erklärt, laut und ehrlich. Wer zum Teufel?, Vollidiot &amp; Tipsy Horses. Jetzt bei Amazon.">
@@ -31,6 +42,20 @@
 <script src="./support.js"></script>
 </head>
 <body>
+<div id="pp-boot" style="position:fixed;inset:0;z-index:99999;background:#171717;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px">
+  <div style="font-family:'Anton',system-ui,sans-serif;font-size:30px;letter-spacing:.04em;color:#F3EBDD">PARTY PEAK</div>
+  <div style="width:34px;height:34px;border:3px solid rgba(249,119,23,.25);border-top-color:#F97717;border-radius:50%;animation:pp-spin .8s linear infinite"></div>
+</div>
+<script>
+(function(){
+  function kill(){var b=document.getElementById('pp-boot');if(!b)return;b.style.transition='opacity .35s ease';b.style.opacity='0';setTimeout(function(){if(b&&b.parentNode)b.parentNode.removeChild(b);},400);}
+  function ready(){var r=document.getElementById('dc-root');return !!(r&&r.firstElementChild);}
+  if(ready()){kill();return;}
+  var obs=new MutationObserver(function(){if(ready()){obs.disconnect();kill();}});
+  obs.observe(document.documentElement,{childList:true,subtree:true});
+  setTimeout(function(){try{obs.disconnect();}catch(e){}kill();},15000);
+})();
+</script>
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,6 +69,7 @@
   .pp-skip{position:absolute;left:-9999px;top:0;z-index:10000;background:#E01E1E;color:#fff;font-weight:700;font-size:14px;padding:12px 20px;border-radius:0 0 10px 0}
   .pp-skip:focus{left:0}
   a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:3px solid #F97717;outline-offset:2px;border-radius:4px}
+  @keyframes pp-spin{to{transform:rotate(360deg)}}
   @media (max-width:860px){
     .pp-header{padding:14px 18px !important}
     .pp-logo{height:48px !important}
