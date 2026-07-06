@@ -80,7 +80,7 @@
     .pp-hero-copy{padding:56px 0 0 0 !important;max-width:none !important}
     .pp-h1{font-size:40px !important}
     .pp-hero-photo{position:relative !important;width:100% !important;height:420px !important;margin-top:24px !important}
-    .pp-hero-photo img{object-position:center 30% !important;-webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 12%, rgba(0,0,0,1) 93%, rgba(0,0,0,0) 100%) !important;mask-image:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 12%, rgba(0,0,0,1) 93%, rgba(0,0,0,0) 100%) !important}
+    .pp-hero-photo img{object-position:center 30% !important;-webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 14%, rgba(0,0,0,1) 100%) !important;mask-image:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 14%, rgba(0,0,0,1) 100%) !important}
     .pp-imgwrap{display:none !important}
     .pp-hero-tint,.pp-hero-scrim{display:none !important}
     .pp-strip-grid{grid-template-columns:1fr !important;gap:0 !important}
@@ -134,7 +134,7 @@
 
     <!-- lifestyle photo, vertikaler Verlauf oben -> unten, unten verankert (Spiele sichtbar) -->
     <div class="pp-hero-photo" style="position:absolute;inset:0;width:100%;z-index:1;pointer-events:none">
-      <img src="assets/hero-party.png" alt="Freunde spielen Party-Peak-Spiele" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center bottom">
+      <img src="assets/hero-party.png" alt="Freunde spielen Party-Peak-Spiele" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 72%">
       <div class="pp-hero-tint" style="position:absolute;inset:0;background:linear-gradient(to bottom, #F97717 0%, rgba(249,119,23,.82) 16%, rgba(232,72,14,.32) 42%, rgba(232,72,14,0) 66%)"></div>
       <div class="pp-hero-scrim" style="position:absolute;inset:0;background:linear-gradient(to top, rgba(18,10,4,.50) 0%, rgba(18,10,4,0) 40%)"></div>
     </div>
@@ -285,7 +285,7 @@
               <div style="font-family:'Anton',sans-serif;font-size:38px;color:#F3EBDD;line-height:1">{{ detail.uvp }}</div>
               <div style="font-size:13px;color:#A2937E;font-weight:500;margin-top:4px">UVP inkl. MwSt. · Aktueller Preis bei Amazon kann abweichen</div>
             </div>
-            <img src="assets/logo.png" alt="" style="height:40px;width:auto;opacity:.9">
+            <img src="assets/amazon-logo.png" alt="Amazon" onError="this.style.display='none'" style="height:34px;width:auto;opacity:.95">
           </div>
           <a href="{{ detail.url }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#E01E1E;color:#fff;font-weight:700;font-size:16px;letter-spacing:.03em;text-transform:uppercase;padding:17px 24px;border-radius:999px;box-shadow:0 12px 24px -8px rgba(160,10,10,.6);transition:transform .15s,background .15s" onMouseOver="this.style.transform='translateY(-2px)';this.style.background='#C41414'" onMouseOut="this.style.transform='none';this.style.background='#E01E1E'">Bei Amazon ansehen →</a>
           <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 16px;text-align:center;font-size:12px;color:#9A8770;margin-top:12px;font-weight:500"><span>✓ Verkauf &amp; Versand über Amazon</span><span>✓ 30 Tage Rückgabe</span><span>✓ Öffnet in neuem Tab</span></div>
@@ -770,11 +770,11 @@ class Component extends DCLogic {
   get PRODUCTS() {
     return [
       {
-        name: 'Tipsy Horses', tag: 'Trinkspiel · Reaktion', tint: '#232019', imgSize: '80%', imgShift: '0%', uvp: '9,99 €',
+        name: 'Tipsy Horses', tag: 'Trinkspiel · Glücksspiel', tint: '#232019', imgSize: '80%', imgShift: '0%', uvp: '9,99 €',
         imgBase: 'Tipsy', imgCount: 8, img: 'assets/Tipsy1.png', url: 'https://www.amazon.de/dp/B0DGFFNQL5',
         teaser: 'Das schnelle Reaktions-Trinkspiel, das jede Party in den Galopp bringt. Wer zu langsam ist, trinkt.',
         longDesc: 'Das schnelle Reaktions-Trinkspiel für die ganze Runde. Karten aufdecken, blitzschnell reagieren – wer zögert, trinkt. Der Renner auf jeder Party, in unter zwei Minuten erklärt.',
-        features: ['2–8 Spieler', 'Ab 18 Jahren', 'ca. 30 Min', 'Reaktion'],
+        features: ['4+ Spieler', 'Ab 18 Jahren', 'ca. 10 Min', 'Glücksspiel'],
         acc: {
           ablauf: 'Reihum werden Karten aufgedeckt. Sobald die Bedingung eintritt, heißt es: schneller sein als der Rest. Wer patzt oder zu langsam ist, muss trinken. Klingt simpel – eskaliert garantiert.',
           lieferumfang: 'Spielkarten, kompakte Verpackung im Party-Peak-Format und eine kurze, klare Spielanleitung. Passt in jede Tasche und ist sofort startklar.',
@@ -782,11 +782,11 @@ class Component extends DCLogic {
         }
       },
       {
-        name: 'Vollidiot', tag: 'Trinkspiel · Party', tint: '#232019', imgSize: '80%', imgShift: '0%', uvp: '12,99 €',
+        name: 'Vollidiot', tag: 'Trinkspiel · Taktisch', tint: '#232019', imgSize: '80%', imgShift: '0%', uvp: '12,99 €',
         imgBase: 'Vollidiot', imgCount: 8, img: 'assets/Vollidiot1.png', url: 'https://www.amazon.de/dp/B0FPQXVNCP',
         teaser: 'Das Trinkspiel für alle, die gern mal danebenliegen. Ehrlich, laut und garantiert eskalierend.',
         longDesc: 'Das Trinkspiel für alle, die gern mal danebenliegen. Ehrliche Fragen, freche Aufgaben und jede Menge Situationen, in denen ihr euch besser kennenlernt, als euch lieb ist.',
-        features: ['3–10 Spieler', 'Ab 18 Jahren', 'ca. 45 Min', 'Party'],
+        features: ['3–6 Spieler', 'Ab 18 Jahren', 'ca. 15 Min', 'Taktisch'],
         acc: {
           ablauf: 'Karte ziehen, Aufgabe oder Frage vorlesen, machen – oder trinken. Von harmlos bis grenzwertig ist alles dabei. Ihr bestimmt selbst, wie weit die Runde geht.',
           lieferumfang: 'Kartendeck im Neon-Design, robuste Box und eine Spielanleitung. Direkt auspacken und loslegen – ohne Vorbereitung.',
